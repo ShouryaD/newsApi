@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>News App</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Latest News</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <form class="d-flex ms-auto" role="search">
+                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-success" id="search" type="submit">Search</button>
+                </form>
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" onclick="api('india')" aria-current="page" href="#">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" onclick="api('world')" href="#">World</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" onclick="api('India')" href="#">India</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" onclick="api('Sports')" href="#">Sports</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" onclick="api('entertainment')" href="#">Entertainment</a>
+                    </li>
+
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+
+    </div>
+</body>
+<script>
+    let container = document.querySelector('.container')
+    let inp = document.querySelector('input')
+
+
+    let searchBtn = document.getElementById('search')
+    console.log(searchBtn)
+
+    let api = async (value) => {
+        let res = await fetch(`https://newsapi.org/v2/everything?q=${value}&apiKey=9d0eef093c9b411e97ae5445ecfdc784`)
+        let data = await res.json()
+        let news = data.articles
+        console.log(news)
+        container.innerHTML = ''
+        news.forEach(ele => {
+            let box = document.createElement('div')
+            let img = document.createElement('img')
+            let title = document.createElement('h3')
+            let desc = document.createElement('p')
+            let button = document.createElement('button')
+
+            //innerHtml
+            title.innerHTML = ele.title
+            desc.innerHTML = ele.description
+            if (ele.urlToImage) {
+                img.src = ele.urlToImage
+            }
+            else {
+                img.src = 'https://img.freepik.com/free-vector/breaking-news-concept_23-2148514216.jpg'
+            }
+            button.innerHTML = 'View'
+            //classes
+            box.className = 'box'
+            title.className = 'title'
+            button.className = 'btn'
+
+            box.append(img, title, button)
+            container.append(box)
+
+            button.onclick = () => {
+                window.location.href = ele.url
+            }
+        });
+    }
+    api('india')
+
+    searchBtn.onclick = (e) => {
+        let inpValue = inp.value
+        console.log(inpValue)
+        e.preventDefault()
+        api(inpValue)
+    }
+</script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+    crossorigin="anonymous"></script>
+
+</html>
